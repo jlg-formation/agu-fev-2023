@@ -3,6 +3,19 @@
 @import "../node_modules/normalize.css/normalize.css";
 @import "../node_modules/sanitize.css/sanitize.css";
 
+@import "./scss/button.scss";
+
 body {
   font-family: sans-serif;
+}
+
+main {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1em;
+}
+
+h1 {
+  text-align: center;
 }
