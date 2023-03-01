@@ -21,25 +21,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="name">Pelle</td>
-          <td class="price">4.50€</td>
-          <td class="qty">12</td>
-        </tr>
-        <tr>
-          <td class="name">Marteau</td>
-          <td class="price">1.50€</td>
-          <td class="qty">120</td>
-        </tr>
-        <tr>
-          <td class="name">Tournevis</td>
-          <td class="price">2.50€</td>
-          <td class="qty">34</td>
-        </tr>
-        <tr>
-          <td class="name">Tronçonneuse</td>
-          <td class="price">120.00€</td>
-          <td class="qty">3</td>
+        <tr *ngFor="let a of articles">
+          <td class="name">{{ a.name }}</td>
+          <td class="price">
+            {{ a.price | currency : "EUR" : "symbol" : undefined : "fr-BE" }}
+          </td>
+          <td class="qty">{{ a.qty }}</td>
         </tr>
       </tbody>
     </table>
