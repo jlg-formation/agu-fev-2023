@@ -1,5 +1,6 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Component } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-add',
@@ -8,4 +9,6 @@ import { Component } from '@angular/core';
 })
 export class AddComponent {
   faPlus = faPlus;
+
+  f = new FormGroup({});
 }
