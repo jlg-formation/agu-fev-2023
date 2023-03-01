@@ -24,7 +24,7 @@
         <tr *ngFor="let a of articles">
           <td class="name">{{ a.name }}</td>
           <td class="price">
-            {{ a.price | currency : "EUR" : "symbol" : undefined : "fr-BE" }}
+            {{ a.price | currency }}
           </td>
           <td class="qty">{{ a.qty }}</td>
         </tr>
