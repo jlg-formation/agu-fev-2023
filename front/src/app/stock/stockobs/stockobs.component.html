@@ -1,0 +1,52 @@
+<main>
+  <h1>Liste des articles</h1>
+  <div class="content">
+    <nav>
+      <button title="Rafraichir" (click)="refresh()" [disabled]="isRefreshing">
+        <fa-icon
+          [icon]="isRefreshing ? faCircleNotch : faRotateRight"
+          [spin]="isRefreshing"
+        ></fa-icon>
+      </button>
+      <a routerLink="add" class="button" title="Ajouter">
+        <fa-icon [icon]="faPlus"></fa-icon>
+      </a>
+      <button
+        title="Supprimer"
+        [hidden]="selectedArticles.size === 0"
+        (click)="remove()"
+        [disabled]="isRemoving"
+      >
+        <fa-icon
+          [icon]="isRemoving ? faCircleNotch : faTrashCan"
+          [spin]="isRemoving"
+        ></fa-icon>
+      </button>
+    </nav>
+    <div class="error">
+      {{ errorMsg }}
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th class="name">Nom</th>
+          <th class="price">Prix</th>
+          <th class="qty">Quantité</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let a of articleService.articles"
+          (click)="select(a)"
+          [class.selected]="selectedArticles.has(a)"
+        >
+          <td class="name">{{ a.name }}</td>
+          <td class="price">
+            {{ a.price | currency }}
+          </td>
+          <td class="qty">{{ a.qty }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>

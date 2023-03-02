@@ -28,8 +28,6 @@ export class ArticleService {
   async refresh() {
     await sleep(2000);
     this.articles = this.getArticles();
-    throw new Error('Technical Error');
-    console.log('refresh finished');
   }
 
   async remove(ids: string[]) {
