@@ -24,8 +24,14 @@
       <input type="number" formControlName="qty" min="0" />
       <span class="error"> </span>
     </label>
-    <button class="primary" type="submit">
-      <fa-icon [icon]="faPlus"></fa-icon>
+    <div class="error">
+      {{ errorMsg }}
+    </div>
+    <button class="primary" type="submit" [disabled]="isAdding || f.invalid">
+      <fa-icon
+        [icon]="isAdding ? faCircleNotch : faPlus"
+        [spin]="isAdding"
+      ></fa-icon>
       <span>Ajouter</span>
     </button>
   </form>

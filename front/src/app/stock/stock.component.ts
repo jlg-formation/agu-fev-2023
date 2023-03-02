@@ -3,6 +3,7 @@ import {
   faPlus,
   faRotateRight,
   faTrashCan,
+  faCircleNotch,
 } from '@fortawesome/free-solid-svg-icons';
 import { Article } from '../interfaces/article';
 import { ArticleService } from '../services/article.service';
@@ -16,8 +17,15 @@ export class StockComponent implements OnDestroy {
   faPlus = faPlus;
   faRotateRight = faRotateRight;
   faTrashCan = faTrashCan;
+  faCircleNotch = faCircleNotch;
+
+  isRemoving = false;
+
+  errorMsg = '';
 
   selectedArticles = new Set<Article>();
+
+  isRefreshing = false;
 
   constructor(protected readonly articleService: ArticleService) {}
 
@@ -33,15 +41,31 @@ export class StockComponent implements OnDestroy {
     this.selectedArticles.add(a);
   }
 
-  remove() {
-    console.log('remove');
-    const ids = [...this.selectedArticles].map((a) => a.id);
-    this.articleService.remove(ids);
-    this.selectedArticles.clear();
+  async remove() {
+    try {
+      console.log('remove');
+      this.isRemoving = true;
+      const ids = [...this.selectedArticles].map((a) => a.id);
+      await this.articleService.remove(ids);
+      this.selectedArticles.clear();
+    } catch (err) {
+      console.log('err: ', err);
+    } finally {
+      this.isRemoving = false;
+    }
   }
 
-  refresh() {
-    console.log('refresh');
-    this.articleService.refresh();
+  async refresh() {
+    try {
+      console.log('refresh');
+      this.errorMsg = '';
+      this.isRefreshing = true;
+      await this.articleService.refresh();
+    } catch (err) {
+      console.log('err: ', err);
+      this.errorMsg = err instanceof Error ? err.message : `oups. Erreur...`;
+    } finally {
+      this.isRefreshing = false;
+    }
   }
 }

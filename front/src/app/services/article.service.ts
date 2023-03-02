@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Article, NewArticle } from '../interfaces/article';
-import { generateId } from '../misc';
+import { generateId, sleep } from '../misc';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +8,8 @@ import { generateId } from '../misc';
 export class ArticleService {
   articles: Article[] = this.getArticles();
 
-  add(newArticle: NewArticle) {
+  async add(newArticle: NewArticle) {
+    await sleep(2000);
     this.articles.push({ id: generateId(), ...newArticle });
     this.save();
   }
@@ -24,11 +25,15 @@ export class ArticleService {
     return JSON.parse(str);
   }
 
-  refresh() {
+  async refresh() {
+    await sleep(2000);
     this.articles = this.getArticles();
+    throw new Error('Technical Error');
+    console.log('refresh finished');
   }
 
-  remove(ids: string[]) {
+  async remove(ids: string[]) {
+    await sleep(2000);
     this.articles = this.articles.filter((a) => !ids.includes(a.id));
     this.save();
   }

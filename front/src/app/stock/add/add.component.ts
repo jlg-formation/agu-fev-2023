@@ -1,4 +1,4 @@
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,6 +20,9 @@ export class AddComponent implements OnInit {
     qty: new FormControl(1, [Validators.required, Validators.min(0)]),
   });
   faPlus = faPlus;
+  faCircleNotch = faCircleNotch;
+  isAdding = false;
+  errorMsg = '';
 
   constructor(
     private readonly router: Router,
@@ -43,10 +46,19 @@ export class AddComponent implements OnInit {
   }
 
   async submit() {
-    console.log('submit');
-    const newArticle = this.f.value as NewArticle;
-    console.log('newArticle: ', newArticle);
-    await this.articleService.add(newArticle);
-    this.router.navigate(['..'], { relativeTo: this.route });
+    try {
+      console.log('submit');
+      this.errorMsg = '';
+      this.isAdding = true;
+      const newArticle = this.f.value as NewArticle;
+      console.log('newArticle: ', newArticle);
+      await this.articleService.add(newArticle);
+      this.router.navigate(['..'], { relativeTo: this.route });
+    } catch (err) {
+      console.log('err: ', err);
+      this.errorMsg = err instanceof Error ? err.message : 'oups. Erreur';
+    } finally {
+      this.isAdding = false;
+    }
   }
 }
