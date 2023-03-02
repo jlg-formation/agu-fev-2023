@@ -5,8 +5,9 @@ import {
   faTrashCan,
   faCircleNotch,
 } from '@fortawesome/free-solid-svg-icons';
+import { Observable, tap } from 'rxjs';
+import { ArticleObsService } from 'src/app/services/article-obs.service';
 import { Article } from '../../interfaces/article';
-import { ArticleService } from '../../services/article.service';
 
 @Component({
   selector: 'app-stockobs',
@@ -27,7 +28,14 @@ export class StockObsComponent implements OnDestroy {
 
   isRefreshing = false;
 
-  constructor(protected readonly articleService: ArticleService) {}
+  articles$: Observable<Article[]> = this.articleObsService.articles$.pipe(
+    tap(() => {
+      this.isRefreshing = false;
+      this.isRemoving = false;
+    })
+  );
+
+  constructor(protected readonly articleObsService: ArticleObsService) {}
 
   ngOnDestroy(): void {
     console.log('destroy stock');
@@ -50,22 +58,18 @@ export class StockObsComponent implements OnDestroy {
       this.selectedArticles.clear();
     } catch (err) {
       console.log('err: ', err);
-    } finally {
-      this.isRemoving = false;
     }
   }
 
-  async refresh() {
+  refresh() {
     try {
       console.log('refresh');
       this.errorMsg = '';
       this.isRefreshing = true;
-      await this.articleService.refresh();
+      this.articleObsService.refresh();
     } catch (err) {
       console.log('err: ', err);
       this.errorMsg = err instanceof Error ? err.message : `oups. Erreur...`;
-    } finally {
-      this.isRefreshing = false;
     }
   }
 }

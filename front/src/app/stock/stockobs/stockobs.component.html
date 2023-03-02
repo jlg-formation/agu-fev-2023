@@ -36,7 +36,7 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let a of articleService.articles"
+          *ngFor="let a of articles$ | async"
           (click)="select(a)"
           [class.selected]="selectedArticles.has(a)"
         >
