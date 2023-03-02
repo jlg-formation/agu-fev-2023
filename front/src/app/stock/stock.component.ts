@@ -32,4 +32,11 @@ export class StockComponent implements OnDestroy {
     }
     this.selectedArticles.add(a);
   }
+
+  remove() {
+    console.log('remove');
+    const ids = [...this.selectedArticles].map((a) => a.id);
+    this.articleService.remove(ids);
+    this.selectedArticles.clear();
+  }
 }

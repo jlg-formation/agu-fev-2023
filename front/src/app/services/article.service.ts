@@ -8,6 +8,11 @@ import { generateId } from '../misc';
 export class ArticleService {
   articles: Article[] = this.getArticles();
 
+  add(newArticle: NewArticle) {
+    this.articles.push({ id: generateId(), ...newArticle });
+    this.save();
+  }
+
   getArticles(): Article[] {
     const str = localStorage.getItem('articles');
     if (str === null) {
@@ -19,8 +24,8 @@ export class ArticleService {
     return JSON.parse(str);
   }
 
-  add(newArticle: NewArticle) {
-    this.articles.push({ id: generateId(), ...newArticle });
+  remove(ids: string[]) {
+    this.articles = this.articles.filter((a) => !ids.includes(a.id));
     this.save();
   }
 
