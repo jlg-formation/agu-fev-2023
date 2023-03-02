@@ -2,6 +2,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NewArticle } from 'src/app/interfaces/article';
+import { ArticleService } from 'src/app/services/article.service';
 
 @Component({
   selector: 'app-add',
@@ -21,7 +23,8 @@ export class AddComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly articleService: ArticleService
   ) {}
 
   ngOnInit(): void {
@@ -39,8 +42,11 @@ export class AddComponent implements OnInit {
     });
   }
 
-  submit() {
+  async submit() {
     console.log('submit');
+    const newArticle = this.f.value as NewArticle;
+    console.log('newArticle: ', newArticle);
+    await this.articleService.add(newArticle);
     this.router.navigate(['..'], { relativeTo: this.route });
   }
 }

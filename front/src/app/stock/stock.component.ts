@@ -4,7 +4,7 @@ import {
   faRotateRight,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
-import { Article } from '../interfaces/article';
+import { ArticleService } from '../services/article.service';
 
 @Component({
   selector: 'app-stock',
@@ -12,13 +12,11 @@ import { Article } from '../interfaces/article';
   styleUrls: ['./stock.component.scss'],
 })
 export class StockComponent implements OnDestroy {
-  articles: Article[] = [
-    { name: 'Tournevis', price: 3.45, qty: 123 },
-    { name: 'Pelle', price: 12, qty: 45 },
-  ];
   faPlus = faPlus;
   faRotateRight = faRotateRight;
   faTrashCan = faTrashCan;
+
+  constructor(protected readonly articleService: ArticleService) {}
 
   ngOnDestroy(): void {
     console.log('destroy stock');
