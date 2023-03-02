@@ -3,15 +3,26 @@
   <form [formGroup]="f">
     <label>
       <span>Nom</span>
-      <input type="text" />
+      <input type="text" formControlName="name" />
+      <span class="error">
+        <span *ngIf="f.controls.name.errors?.['required'] === true">
+          Champ obligatoire
+        </span>
+        <span *ngIf="f.controls.name.errors?.['maxlength']">
+          Trop long ({{ f.controls.name.errors?.['maxlength'].actualLength + '>' + f.controls.name.errors?.['maxlength'].requiredLength }}
+          caractères)
+        </span>
+      </span>
     </label>
     <label>
       <span>Prix</span>
-      <input type="number" />
+      <input type="number" formControlName="price" min="0" step="0.01" />
+      <span class="error"> </span>
     </label>
     <label>
       <span>Quantité</span>
-      <input type="number" />
+      <input type="number" formControlName="qty" min="0" />
+      <span class="error"> </span>
     </label>
     <button class="primary" type="submit">
       <fa-icon [icon]="faPlus"></fa-icon>
