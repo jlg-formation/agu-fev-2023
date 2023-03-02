@@ -39,4 +39,9 @@ export class StockComponent implements OnDestroy {
     this.articleService.remove(ids);
     this.selectedArticles.clear();
   }
+
+  refresh() {
+    console.log('refresh');
+    this.articleService.refresh();
+  }
 }

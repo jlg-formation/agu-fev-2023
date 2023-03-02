@@ -24,6 +24,10 @@ export class ArticleService {
     return JSON.parse(str);
   }
 
+  refresh() {
+    this.articles = this.getArticles();
+  }
+
   remove(ids: string[]) {
     this.articles = this.articles.filter((a) => !ids.includes(a.id));
     this.save();
