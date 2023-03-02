@@ -1,6 +1,7 @@
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add',
@@ -17,6 +18,11 @@ export class AddComponent implements OnInit {
     qty: new FormControl(1, [Validators.required, Validators.min(0)]),
   });
   faPlus = faPlus;
+
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.f.controls.qty.valueChanges.subscribe((value) => {
@@ -35,5 +41,6 @@ export class AddComponent implements OnInit {
 
   submit() {
     console.log('submit');
+    this.router.navigate(['..'], { relativeTo: this.route });
   }
 }
