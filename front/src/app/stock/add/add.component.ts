@@ -32,4 +32,8 @@ export class AddComponent implements OnInit {
       });
     });
   }
+
+  submit() {
+    console.log('submit');
+  }
 }
