@@ -60,7 +60,8 @@ describe('HttpArticleService', () => {
     req.flush([], { status: 200, statusText: 'OK' });
     tick(300);
 
-    service.add(newArticle);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    service.add(newArticle).catch(() => {});
     req = httpTestingController.expectOne(url);
     expect(req.request.method).toEqual('POST');
     req.flush('', { status: 500, statusText: 'Internal Server Error' });
@@ -90,7 +91,9 @@ describe('HttpArticleService', () => {
     req.flush([], { status: 200, statusText: 'OK' });
     tick(300);
 
-    service.remove([]);
+    service.remove([]).catch(() => {
+      // no comment
+    });
     req = httpTestingController.expectOne(url);
     expect(req.request.method).toEqual('DELETE');
     req.flush('', { status: 500, statusText: 'Internal Server Error' });
