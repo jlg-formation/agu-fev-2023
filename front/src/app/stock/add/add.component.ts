@@ -32,16 +32,16 @@ export class AddComponent implements OnInit {
 
   ngOnInit(): void {
     this.f.controls.qty.valueChanges.subscribe((value) => {
-      if (value === null) {
-        this.f.controls.qty.setValue(0, {
-          emitEvent: false,
-        });
-        return;
-      }
+      // if (value === null) {
+      //   this.f.controls.qty.setValue(0, {
+      //     emitEvent: false,
+      //   });
+      //   return;
+      // }
       console.log('value: ', value);
-      this.f.controls.qty.setValue(Math.floor(value), {
-        emitEvent: false,
-      });
+      // this.f.controls.qty.setValue(Math.floor(value), {
+      //   emitEvent: false,
+      // });
     });
   }
 
