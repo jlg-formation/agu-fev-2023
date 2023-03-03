@@ -2,7 +2,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { HttpArticleService, url } from './http-article.service';
 
@@ -18,11 +18,16 @@ describe('HttpArticleService', () => {
     httpTestingController = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', () => {
+  afterEach(() => {
+    httpTestingController.verify();
+  });
+
+  it('should be created', fakeAsync(() => {
     const req = httpTestingController.expectOne(url);
     expect(req.request.method).toEqual('GET');
     req.flush([], { status: 200, statusText: 'OK' });
+    tick(300);
 
     expect(service).toBeTruthy();
-  });
+  }));
 });

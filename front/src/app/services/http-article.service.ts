@@ -18,11 +18,18 @@ export class HttpArticleService extends ArticleService {
   }
 
   override async refresh(): Promise<void> {
-    console.log('refresh');
+    try {
+      console.log('refresh');
 
-    const articles = await lastValueFrom(this.http.get<Article[]>(url));
-    this.articles$.next(articles);
-    this.isLoading = false;
+      const articles = await lastValueFrom(
+        this.http.get<Article[]>(url).pipe(delay(300))
+      );
+      this.articles$.next(articles);
+    } catch (err) {
+      console.log('err: ', err);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   override async add(newArticle: NewArticle): Promise<void> {
