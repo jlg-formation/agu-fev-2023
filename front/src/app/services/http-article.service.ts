@@ -12,6 +12,7 @@ const url = 'http://localhost:3000/api/articles';
 export class HttpArticleService extends ArticleService {
   constructor(private readonly http: HttpClient) {
     super();
+    this.isLoading = true;
     console.log('http article instantiated');
     this.refresh();
   }
@@ -19,9 +20,10 @@ export class HttpArticleService extends ArticleService {
   override async refresh(): Promise<void> {
     console.log('refresh');
 
-    this.articles = await lastValueFrom(
+    const articles = await lastValueFrom(
       this.http.get<Article[]>(url).pipe(delay(2000))
     );
+    this.articles$.next(articles);
     this.isLoading = false;
   }
 

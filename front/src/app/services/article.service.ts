@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { Article, NewArticle } from '../interfaces/article';
 import { generateId, sleep } from '../misc';
 
@@ -6,16 +7,23 @@ import { generateId, sleep } from '../misc';
   providedIn: 'root',
 })
 export class ArticleService {
-  isLoading = true;
-  articles: Article[] = this.getArticles();
+  isLoading = false;
+  articles$ = new BehaviorSubject(this.getArticles());
+
+  constructor() {
+    this.articles$.subscribe((articles) => {
+      localStorage.setItem('articles', JSON.stringify(articles));
+    });
+  }
 
   async add(newArticle: NewArticle) {
     await sleep(2000);
-    this.articles.push({ id: generateId(), ...newArticle });
-    this.save();
+    const articles = this.articles$.value;
+    articles.push({ id: generateId(), ...newArticle });
+    this.articles$.next(articles);
   }
 
-  getArticles(): Article[] {
+  private getArticles(): Article[] {
     const str = localStorage.getItem('articles');
     if (str === null) {
       return [
@@ -28,16 +36,13 @@ export class ArticleService {
 
   async refresh() {
     await sleep(2000);
-    this.articles = this.getArticles();
+    this.articles$.next(this.getArticles());
   }
 
   async remove(ids: string[]) {
     await sleep(2000);
-    this.articles = this.articles.filter((a) => !ids.includes(a.id));
-    this.save();
-  }
-
-  save() {
-    localStorage.setItem('articles', JSON.stringify(this.articles));
+    this.articles$.next(
+      this.articles$.value.filter((a) => !ids.includes(a.id))
+    );
   }
 }

@@ -1,9 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
 import {
+  faCircleNotch,
   faPlus,
   faRotateRight,
   faTrashCan,
-  faCircleNotch,
 } from '@fortawesome/free-solid-svg-icons';
 import { Article } from '../interfaces/article';
 import { ArticleService } from '../services/article.service';

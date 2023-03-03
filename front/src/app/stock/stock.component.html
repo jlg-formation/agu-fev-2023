@@ -45,7 +45,7 @@
         </tr>
         <ng-template #loaded>
           <tr
-            *ngFor="let a of articleService.articles"
+            *ngFor="let a of articleService.articles$ | async"
             (click)="select(a)"
             [class.selected]="selectedArticles.has(a)"
           >
