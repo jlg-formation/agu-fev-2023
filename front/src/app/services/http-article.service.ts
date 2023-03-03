@@ -4,7 +4,7 @@ import { catchError, delay, lastValueFrom } from 'rxjs';
 import { Article, NewArticle } from '../interfaces/article';
 import { ArticleService } from './article.service';
 
-const url = 'http://localhost:3000/api/articles';
+export const url = 'http://localhost:3000/api/articles';
 
 @Injectable({
   providedIn: 'root',
@@ -20,9 +20,7 @@ export class HttpArticleService extends ArticleService {
   override async refresh(): Promise<void> {
     console.log('refresh');
 
-    const articles = await lastValueFrom(
-      this.http.get<Article[]>(url).pipe(delay(2000))
-    );
+    const articles = await lastValueFrom(this.http.get<Article[]>(url));
     this.articles$.next(articles);
     this.isLoading = false;
   }
