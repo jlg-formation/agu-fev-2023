@@ -17,7 +17,7 @@ export class ArticleService {
   }
 
   async add(newArticle: NewArticle) {
-    await sleep(2000);
+    await sleep(300);
     const articles = this.articles$.value;
     articles.push({ id: generateId(), ...newArticle });
     this.articles$.next(articles);
@@ -35,12 +35,12 @@ export class ArticleService {
   }
 
   async refresh() {
-    await sleep(2000);
+    await sleep(300);
     this.articles$.next(this.getArticles());
   }
 
   async remove(ids: string[]) {
-    await sleep(2000);
+    await sleep(300);
     this.articles$.next(
       this.articles$.value.filter((a) => !ids.includes(a.id))
     );

@@ -30,6 +30,7 @@ export class HttpArticleService extends ArticleService {
   override async add(newArticle: NewArticle): Promise<void> {
     await lastValueFrom(
       this.http.post(url, newArticle).pipe(
+        delay(300),
         catchError((err) => {
           console.error('err: ', err);
           throw new Error('Technical error');
