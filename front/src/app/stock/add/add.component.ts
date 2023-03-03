@@ -53,6 +53,7 @@ export class AddComponent implements OnInit {
       const newArticle = this.f.value as NewArticle;
       console.log('newArticle: ', newArticle);
       await this.articleService.add(newArticle);
+      await this.articleService.refresh();
       this.router.navigate(['..'], { relativeTo: this.route });
     } catch (err) {
       console.log('err: ', err);
