@@ -4,7 +4,7 @@ import { generateId } from "./misc";
 
 const api = Router();
 
-const articles: Article[] = [
+let articles: Article[] = [
   { id: "a1", name: "Marteau", price: 3.45, qty: 123 },
   { id: "a2", name: "Pelle", price: 12, qty: 45 },
 ];
@@ -24,6 +24,12 @@ api.post("/articles", (req, res) => {
   const article = { id: generateId(), ...newArticle };
   articles.push(article);
   res.status(201).end();
+});
+
+api.delete("/articles", (req, res) => {
+  const ids: string[] = req.body;
+  articles = articles.filter((a) => !ids.includes(a.id));
+  res.status(204).end();
 });
 
 export default api;
