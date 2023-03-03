@@ -6,6 +6,7 @@ import { generateId, sleep } from '../misc';
   providedIn: 'root',
 })
 export class ArticleService {
+  isLoading = true;
   articles: Article[] = this.getArticles();
 
   async add(newArticle: NewArticle) {
