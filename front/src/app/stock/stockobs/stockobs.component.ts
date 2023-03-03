@@ -50,15 +50,15 @@ export class StockObsComponent implements OnDestroy {
   }
 
   async remove() {
-    try {
-      console.log('remove');
-      this.isRemoving = true;
-      const ids = [...this.selectedArticles].map((a) => a.id);
-      await this.articleService.remove(ids);
-      this.selectedArticles.clear();
-    } catch (err) {
-      console.log('err: ', err);
-    }
+    // try {
+    //   console.log('remove');
+    //   this.isRemoving = true;
+    //   const ids = [...this.selectedArticles].map((a) => a.id);
+    //   await this.articleService.remove(ids);
+    //   this.selectedArticles.clear();
+    // } catch (err) {
+    //   console.log('err: ', err);
+    // }
   }
 
   refresh() {

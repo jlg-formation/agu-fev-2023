@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AddComponent } from './add/add.component';
-import { StockObsComponent } from './stockobs/stockobs.component';
+import { StockComponent } from './stock.component';
 
 const routes: Routes = [
-  { path: '', component: StockObsComponent },
+  { path: '', component: StockComponent },
   { path: 'add', component: AddComponent },
 ];
 
