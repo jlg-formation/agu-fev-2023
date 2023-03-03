@@ -35,4 +35,23 @@ export class HttpArticleService extends ArticleService {
     );
     console.log('article added');
   }
+
+  override async remove(ids: string[]): Promise<void> {
+    await lastValueFrom(
+      this.http
+        .delete(url, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(ids),
+        })
+        .pipe(
+          catchError((err) => {
+            console.log('err: ', err);
+            throw new Error('Technical Error');
+          })
+        )
+    );
+    console.log('articles deleted');
+  }
 }

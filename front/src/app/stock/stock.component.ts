@@ -44,12 +44,15 @@ export class StockComponent implements OnDestroy {
   async remove() {
     try {
       console.log('remove');
+      this.errorMsg = '';
       this.isRemoving = true;
       const ids = [...this.selectedArticles].map((a) => a.id);
       await this.articleService.remove(ids);
+      await this.articleService.refresh();
       this.selectedArticles.clear();
     } catch (err) {
       console.log('err: ', err);
+      this.errorMsg = err instanceof Error ? err.message : 'Technical Error';
     } finally {
       this.isRemoving = false;
     }
