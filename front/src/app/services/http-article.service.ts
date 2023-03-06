@@ -29,7 +29,7 @@ export class HttpArticleService extends ArticleService {
   override refresh(): Observable<void> {
     console.log('about to refresh http');
 
-    return of(void 0).pipe(
+    return of(undefined).pipe(
       tap(() => {
         console.log('refreshing');
       }),
@@ -38,7 +38,6 @@ export class HttpArticleService extends ArticleService {
       }),
       map((articles) => {
         this.articles$.next(articles);
-        return void 0;
       }),
       catchError((err) => {
         console.log('err: ', err);
