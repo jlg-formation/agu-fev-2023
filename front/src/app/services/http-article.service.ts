@@ -1,6 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, delay, lastValueFrom } from 'rxjs';
+import {
+  catchError,
+  delay,
+  finalize,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { Article, NewArticle } from '../interfaces/article';
 import { ArticleService } from './article.service';
 
@@ -14,53 +23,62 @@ export class HttpArticleService extends ArticleService {
     super();
     this.isLoading = true;
     console.log('http article instantiated');
-    this.refresh();
+    this.refresh().subscribe();
   }
 
-  override async refresh(): Promise<void> {
-    try {
-      console.log('refresh');
+  override refresh(): Observable<void> {
+    console.log('about to refresh http');
 
-      const articles = await lastValueFrom(
-        this.http.get<Article[]>(url).pipe(delay(300))
-      );
-      this.articles$.next(articles);
-    } catch (err) {
-      console.log('err: ', err);
-    } finally {
-      this.isLoading = false;
-    }
+    return of(void 0).pipe(
+      tap(() => {
+        console.log('refreshing');
+      }),
+      switchMap(() => {
+        return this.http.get<Article[]>(url).pipe(delay(300));
+      }),
+      map((articles) => {
+        this.articles$.next(articles);
+        return void 0;
+      }),
+      catchError((err) => {
+        console.log('err: ', err);
+        throw err;
+      }),
+      finalize(() => {
+        this.isLoading = false;
+      })
+    );
   }
 
-  override async add(newArticle: NewArticle): Promise<void> {
-    await lastValueFrom(
-      this.http.post(url, newArticle).pipe(
-        delay(300),
+  override add(newArticle: NewArticle): Observable<void> {
+    return this.http.post(url, newArticle).pipe(
+      delay(300),
+      catchError((err) => {
+        console.error('err: ', err);
+        throw new Error('Technical error');
+      }),
+      map(() => {
+        console.log('article added');
+      })
+    );
+  }
+
+  override remove(ids: string[]): Observable<void> {
+    return this.http
+      .delete(url, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ids),
+      })
+      .pipe(
         catchError((err) => {
-          console.error('err: ', err);
-          throw new Error('Technical error');
+          console.log('err: ', err);
+          throw new Error('Technical Error');
+        }),
+        map(() => {
+          console.log('articles deleted');
         })
-      )
-    );
-    console.log('article added');
-  }
-
-  override async remove(ids: string[]): Promise<void> {
-    await lastValueFrom(
-      this.http
-        .delete(url, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(ids),
-        })
-        .pipe(
-          catchError((err) => {
-            console.log('err: ', err);
-            throw new Error('Technical Error');
-          })
-        )
-    );
-    console.log('articles deleted');
+      );
   }
 }

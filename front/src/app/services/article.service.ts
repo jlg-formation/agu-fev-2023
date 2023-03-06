@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap, timer } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap, timer, delay, map } from 'rxjs';
 import { Article, NewArticle } from '../interfaces/article';
 import { generateId } from '../misc';
 
@@ -18,7 +18,7 @@ export class ArticleService {
 
   add(newArticle: NewArticle) {
     return timer(300).pipe(
-      tap(() => {
+      map(() => {
         const articles = this.articles$.value;
         articles.push({ id: generateId(), ...newArticle });
         this.articles$.next(articles);
@@ -37,8 +37,9 @@ export class ArticleService {
     return JSON.parse(str);
   }
 
-  refresh() {
-    return timer(300).pipe(
+  refresh(): Observable<void> {
+    return of(void 0).pipe(
+      delay(300),
       tap(() => {
         this.articles$.next(this.getArticles());
       })
@@ -47,7 +48,7 @@ export class ArticleService {
 
   remove(ids: string[]) {
     return timer(300).pipe(
-      tap(() => {
+      map(() => {
         this.articles$.next(
           this.articles$.value.filter((a) => !ids.includes(a.id))
         );
