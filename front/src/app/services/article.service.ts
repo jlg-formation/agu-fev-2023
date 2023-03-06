@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap, timer } from 'rxjs';
 import { Article, NewArticle } from '../interfaces/article';
-import { generateId, sleep } from '../misc';
+import { generateId } from '../misc';
 
 @Injectable({
   providedIn: 'root',
@@ -16,11 +16,14 @@ export class ArticleService {
     });
   }
 
-  async add(newArticle: NewArticle) {
-    await sleep(300);
-    const articles = this.articles$.value;
-    articles.push({ id: generateId(), ...newArticle });
-    this.articles$.next(articles);
+  add(newArticle: NewArticle) {
+    return timer(300).pipe(
+      tap(() => {
+        const articles = this.articles$.value;
+        articles.push({ id: generateId(), ...newArticle });
+        this.articles$.next(articles);
+      })
+    );
   }
 
   private getArticles(): Article[] {
@@ -34,15 +37,21 @@ export class ArticleService {
     return JSON.parse(str);
   }
 
-  async refresh() {
-    await sleep(300);
-    this.articles$.next(this.getArticles());
+  refresh() {
+    return timer(300).pipe(
+      tap(() => {
+        this.articles$.next(this.getArticles());
+      })
+    );
   }
 
-  async remove(ids: string[]) {
-    await sleep(300);
-    this.articles$.next(
-      this.articles$.value.filter((a) => !ids.includes(a.id))
+  remove(ids: string[]) {
+    return timer(300).pipe(
+      tap(() => {
+        this.articles$.next(
+          this.articles$.value.filter((a) => !ids.includes(a.id))
+        );
+      })
     );
   }
 }

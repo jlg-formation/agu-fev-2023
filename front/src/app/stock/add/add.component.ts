@@ -1,7 +1,8 @@
-import { faPlus, faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faCircleNotch, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { catchError, finalize, map, of, switchMap } from 'rxjs';
 import { NewArticle } from 'src/app/interfaces/article';
 import { ArticleService } from 'src/app/services/article.service';
 
@@ -46,20 +47,31 @@ export class AddComponent implements OnInit {
   }
 
   async submit() {
-    try {
-      console.log('submit');
-      this.errorMsg = '';
-      this.isAdding = true;
-      const newArticle = this.f.value as NewArticle;
-      console.log('newArticle: ', newArticle);
-      await this.articleService.add(newArticle);
-      await this.articleService.refresh();
-      this.router.navigate(['..'], { relativeTo: this.route });
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = err instanceof Error ? err.message : 'oups. Erreur';
-    } finally {
-      this.isAdding = false;
-    }
+    of(void 0)
+      .pipe(
+        map(() => {
+          console.log('submit');
+          this.errorMsg = '';
+          this.isAdding = true;
+          const newArticle = this.f.value as NewArticle;
+          console.log('newArticle: ', newArticle);
+          return newArticle;
+        }),
+        switchMap((newArticle) => {
+          return this.articleService.add(newArticle);
+        }),
+        switchMap(() => {
+          return this.router.navigate(['..'], { relativeTo: this.route });
+        }),
+        catchError((err) => {
+          console.log('err: ', err);
+          this.errorMsg = err instanceof Error ? err.message : 'oups. Erreur';
+          throw err;
+        }),
+        finalize(() => {
+          this.isAdding = false;
+        })
+      )
+      .subscribe();
   }
 }

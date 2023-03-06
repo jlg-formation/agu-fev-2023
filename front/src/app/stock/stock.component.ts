@@ -5,6 +5,7 @@ import {
   faRotateRight,
   faTrashCan,
 } from '@fortawesome/free-solid-svg-icons';
+import { catchError, finalize, map, of, switchMap, tap } from 'rxjs';
 import { Article } from '../interfaces/article';
 import { ArticleService } from '../services/article.service';
 
@@ -41,34 +42,56 @@ export class StockComponent implements OnDestroy {
     this.selectedArticles.add(a);
   }
 
-  async remove() {
-    try {
-      console.log('remove');
-      this.errorMsg = '';
-      this.isRemoving = true;
-      const ids = [...this.selectedArticles].map((a) => a.id);
-      await this.articleService.remove(ids);
-      await this.articleService.refresh();
-      this.selectedArticles.clear();
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = err instanceof Error ? err.message : 'Technical Error';
-    } finally {
-      this.isRemoving = false;
-    }
+  remove() {
+    of(void 0)
+      .pipe(
+        map(() => {
+          console.log('remove');
+          this.errorMsg = '';
+          this.isRemoving = true;
+          const ids = [...this.selectedArticles].map((a) => a.id);
+          return ids;
+        }),
+        switchMap((ids) => {
+          return this.articleService.remove(ids);
+        }),
+        finalize(() => {
+          this.isRemoving = false;
+        }),
+        tap(() => {
+          this.selectedArticles.clear();
+        }),
+        switchMap(() => this.articleService.refresh()),
+        catchError((err) => {
+          console.log('err: ', err);
+          this.errorMsg =
+            err instanceof Error ? err.message : 'Technical Error';
+          throw err;
+        })
+      )
+      .subscribe();
   }
 
-  async refresh() {
-    try {
-      console.log('refresh');
-      this.errorMsg = '';
-      this.isRefreshing = true;
-      await this.articleService.refresh();
-    } catch (err) {
-      console.log('err: ', err);
-      this.errorMsg = err instanceof Error ? err.message : `oups. Erreur...`;
-    } finally {
-      this.isRefreshing = false;
-    }
+  refresh() {
+    of(void 0)
+      .pipe(
+        tap(() => {
+          console.log('refresh');
+          this.errorMsg = '';
+          this.isRefreshing = true;
+        }),
+        switchMap(() => this.articleService.refresh()),
+        finalize(() => {
+          console.log('refreshed');
+          this.isRefreshing = false;
+        }),
+        catchError((err) => {
+          console.log('err: ', err);
+          this.errorMsg =
+            err instanceof Error ? err.message : `oups. Erreur...`;
+          throw err;
+        })
+      )
+      .subscribe();
   }
 }
