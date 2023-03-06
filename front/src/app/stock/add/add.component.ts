@@ -57,15 +57,11 @@ export class AddComponent implements OnInit {
           console.log('newArticle: ', newArticle);
           return newArticle;
         }),
-        switchMap((newArticle) => {
-          return this.articleService.add(newArticle);
-        }),
-        switchMap(() => {
-          return this.articleService.refresh();
-        }),
-        switchMap(() => {
-          return this.router.navigate(['..'], { relativeTo: this.route });
-        }),
+        switchMap((newArticle) => this.articleService.add(newArticle)),
+        switchMap(() => this.articleService.refresh()),
+        switchMap(() =>
+          this.router.navigate(['..'], { relativeTo: this.route })
+        ),
         catchError((err) => {
           console.log('err: ', err);
           this.errorMsg = err instanceof Error ? err.message : 'oups. Erreur';
